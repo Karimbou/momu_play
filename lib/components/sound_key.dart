@@ -13,7 +13,7 @@ class SoundKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onPress,
       child: Container(
         margin: EdgeInsets.all(15.0),
