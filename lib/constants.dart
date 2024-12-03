@@ -3,14 +3,23 @@ import 'package:flutter/material.dart';
 const kAppName = "MoMu Player";
 
 const kBbottomContainerHeight = 80.0;
-const kActiveCardColor = Color(0xFF1D1E33);
-const kInactiveCardColor = Color(0xFF111328);
-const kBottomContainerColor = Color(0xFFEB1555);
 
-const kLabelTextStyle = TextStyle(
-  fontSize: 18.0,
-  color: Color(0xFF8D8E98),
+const kTabColorGreen = Colors.green;
+const kTabColorBlue = Colors.blue;
+const kTabColorRed = Colors.red;
+const kTabColorYellow = Colors.yellow;
+const kTabColorOrange = Colors.orange;
+const kTabColorPink = Colors.pink;
+const kTabColorPurple = Colors.purple;
+const kTabColorWhite = Colors.white;
+
+const kSliderContainerColor = Colors.black87;
+
+const kSliderTextStyle = TextStyle(
+  fontSize: 24.0,
+  color: Color.fromARGB(255, 104, 187, 111),
 );
+
 const klargeLabelTextStyle = TextStyle(
   fontSize: 50.0,
   fontWeight: FontWeight.w900,
