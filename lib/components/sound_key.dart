@@ -7,7 +7,7 @@ class SoundKey extends StatelessWidget {
   final Color colour;
   // Widget can't be null so the explicit non-null type ? is set
   final Widget? cardchild;
-  // to make the funtion gives back a void which is the one we need you have to change Funtion to a defined Funtion called GestureTapCallback
+  // To make the funtion gives back a void which is the one we need you have to change Funtion to a defined Funtion called GestureTapCallback
   //If you want to make sure that onPress is always a function with the correct signature, change its type to GestureTapCallback?:
   final GestureTapCallback? onPress;
 
@@ -16,7 +16,7 @@ class SoundKey extends StatelessWidget {
     return InkWell(
       onTap: onPress,
       child: Container(
-        margin: EdgeInsets.all(15.0),
+        margin: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: colour,
           borderRadius: BorderRadius.circular(10.0),
