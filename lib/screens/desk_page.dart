@@ -61,6 +61,7 @@ class _DeskPageState extends State<DeskPage> {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: const Text(
@@ -73,7 +74,7 @@ class _DeskPageState extends State<DeskPage> {
           ),
           Expanded(child: _buildEffectSlider()),
           SizedBox(
-            height: 15.0,
+            height: 20.0,
           ),
         ],
       ),
