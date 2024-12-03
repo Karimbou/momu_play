@@ -1,148 +1,175 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:momu_play/components/sound_key.dart';
 import 'package:momu_play/constants.dart';
+import 'package:momu_play/audio/audio_controller.dart';
 
 class DeskPage extends StatefulWidget {
-  final String? title;
+  final String title;
+  final AudioController audioController;
 
-  const DeskPage({super.key, required this.title});
-
+  const DeskPage({
+    super.key,
+    required this.title,
+    required this.audioController,
+  });
   @override
   State<DeskPage> createState() => _DeskPageState();
 }
 
+enum Filter { off, reverb, delay }
+
 class _DeskPageState extends State<DeskPage> {
-  int effectValue = 0;
+  double effectValue = 0.0;
+  Filter selectedFilter = Filter.off;
+
+  void _handleFilterChange(Set<Filter> value) {
+    setState(() {
+      selectedFilter = value.first;
+    });
+
+    switch (selectedFilter) {
+      case Filter.reverb:
+        widget.audioController.applyFilterVerb(effectValue);
+        break;
+      case Filter.delay:
+        widget.audioController.applyFilterDelay(effectValue);
+        break;
+      case Filter.off:
+        widget.audioController.removeFilter();
+        break;
+    }
+  }
+
+  Widget _buildSoundKeyRow(List<SoundKeyConfig> configs) {
+    return Expanded(
+      child: Row(
+        children: configs
+            .map((config) => Expanded(
+                  child: SoundKey(
+                    onPress: () => config.soundPath != null
+                        ? widget.audioController.playSound(config.soundPath!)
+                        : null,
+                    colour: config.color,
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildFilterSection() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: const Text(
+              'Filter Section',
+              style: kSliderTextStyle,
+            ),
+          ),
+          Expanded(
+            child: _buildFilterButtons(),
+          ),
+          Expanded(child: _buildEffectSlider()),
+          SizedBox(
+            height: 15.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterButtons() {
+    return SegmentedButtonTheme(
+      data: SegmentedButtonTheme.of(context).copyWith(
+        style: const ButtonStyle(
+          alignment: Alignment.center,
+        ),
+      ),
+      child: SegmentedButton<Filter>(
+        segments: const <ButtonSegment<Filter>>[
+          ButtonSegment<Filter>(
+            value: Filter.reverb,
+            label: Text('Reverb'),
+          ),
+          ButtonSegment<Filter>(
+            value: Filter.delay,
+            label: Text('Delay'),
+          ),
+          ButtonSegment<Filter>(
+            value: Filter.off,
+            label: Text('Off'),
+          ),
+        ],
+        selected: {selectedFilter},
+        onSelectionChanged: _handleFilterChange,
+      ),
+    );
+  }
+
+  Widget _buildEffectSlider() {
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: Colors.white,
+        inactiveTrackColor: const Color(0xFF8D8E98),
+        thumbColor: const Color(0xffeb1555),
+        overlayColor: const Color(0x29eb1555),
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 18.0),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 35.0),
+      ),
+      child: Slider(
+        value: effectValue,
+        min: 0.0,
+        max: 1.0,
+        onChanged: (double newValue) {
+          setState(() {
+            effectValue = newValue;
+            _handleFilterChange({selectedFilter});
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final soundKeyConfigs = [
+      [
+        SoundKeyConfig(
+            color: kTabColorGreen, soundPath: 'assets/sounds/pew1.mp3'),
+        SoundKeyConfig(
+            color: kTabColorBlue, soundPath: 'assets/sounds/pew1.mp3'),
+      ],
+      [
+        SoundKeyConfig(
+            color: kTabColorOrange, soundPath: 'assets/sounds/pew1.mp3'),
+        SoundKeyConfig(
+            color: kTabColorPink, soundPath: 'assets/sounds/pew1.mp3'),
+      ],
+      [
+        SoundKeyConfig(
+            color: kTabColorYellow, soundPath: 'assets/sounds/pew1.mp3'),
+        SoundKeyConfig(
+            color: kTabColorPurple, soundPath: 'assets/sounds/pew1.mp3'),
+      ],
+      [
+        SoundKeyConfig(
+            color: kTabColorWhite, soundPath: 'assets/sounds/pew1.mp3'),
+        SoundKeyConfig(
+            color: kTabColorRed, soundPath: 'assets/sounds/pew1.mp3'),
+      ],
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text(widget.title),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Expanded(
-            // First Row
-            child: Row(
-              children: [
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorGreen,
-                  ),
-                ),
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorBlue,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Second Row
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorOrange,
-                  ),
-                ),
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorPink,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Third Row
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorYellow,
-                  ),
-                ),
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorPurple,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Fourth Row
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorWhite,
-                  ),
-                ),
-                Expanded(
-                  child: SoundKey(
-                    onPress: () {},
-                    colour: kTabColorRed,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Sliderbottom
-          Expanded(
-            child: SoundKey(
-              colour: kSliderContainerColor,
-              cardchild: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Filtersectio',
-                    style: kSliderTextStyle,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Colors.white,
-                          inactiveTrackColor: Color(0xFF8D8E98),
-                          thumbColor: Color(0xffeb1555),
-                          overlayColor: Color(0x29eb1555),
-                          thumbShape:
-                              RoundSliderThumbShape(enabledThumbRadius: 18.0),
-                          overlayShape:
-                              RoundSliderOverlayShape(overlayRadius: 35.0),
-                        ),
-                        child: Slider(
-                          value: effectValue.toDouble(),
-                          min: 0.0,
-                          max: 1.0,
-                          onChanged: (double newValue) {
-                            setState(() {
-                              effectValue = newValue.round();
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
+          ...soundKeyConfigs.map(_buildSoundKeyRow),
+          _buildFilterSection(),
         ],
       ),
     );

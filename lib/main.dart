@@ -44,11 +44,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark(
           useMaterial3: true,
         ).copyWith(
-          primaryColor: Color(0xFF0A0E21),
-          scaffoldBackgroundColor: Color(0xFF0A0E21),
+          primaryColor: const Color(0xFF0A0E21),
+          scaffoldBackgroundColor: const Color(0xFF0A0E21),
         ),
         home: // MyHomePage(audioController: audioController),
-            DeskPage(title: kAppName));
+            DeskPage(
+          title: kAppName,
+          audioController: audioController,
+        ));
   }
 }
 

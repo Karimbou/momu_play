@@ -26,3 +26,13 @@ class SoundKey extends StatelessWidget {
     );
   }
 }
+
+class SoundKeyConfig {
+  final Color color;
+  final String? soundPath;
+
+  const SoundKeyConfig({
+    required this.color,
+    this.soundPath,
+  });
+}

@@ -60,13 +60,13 @@ class AudioController {
     _soloud!.scheduleStop(_musicHandle!, length);
   }
 
-  void applyFilterVerb() {
+  void applyFilterVerb(double effectValue) {
     _soloud!.filters.freeverbFilter.activate();
     _soloud!.filters.freeverbFilter.wet.value = 0.5;
     _soloud!.filters.freeverbFilter.roomSize.value = 0.5;
   }
 
-  void applyFilterDelay() {
+  void applyFilterDelay(double effectValue) {
     _soloud!.filters.echoFilter.activate();
     _soloud!.filters.echoFilter.wet.value = 0.5;
     _soloud!.filters.echoFilter.delay.value = 0.5;
