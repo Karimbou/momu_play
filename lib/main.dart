@@ -3,8 +3,10 @@ import 'dart:developer' as dev;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:momu_play/screens/desk_page.dart';
 
 import 'audio/audio_controller.dart';
+import 'constants.dart';
 
 void main() async {
   Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
@@ -38,113 +40,115 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter SoLoud Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown),
-        useMaterial3: true,
-      ),
-      home: MyHomePage(audioController: audioController),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.audioController});
-
-  final AudioController audioController;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-enum Filter {
-  Off,
-  Reverb,
-  Delay,
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  static const _gap = SizedBox(height: 16);
-  Filter selectedFilter = Filter.Off;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Flutter SoLoud Demo')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            OutlinedButton(
-              onPressed: () {
-                widget.audioController.playSound('assets/sounds/pew1.mp3');
-              },
-              child: const Text('Play Sound1'),
-            ),
-            OutlinedButton(
-              onPressed: () {
-                widget.audioController.playSound('assets/sounds/pew2.mp3');
-              },
-              child: const Text('Play Sound2'),
-            ),
-            _gap,
-            OutlinedButton(
-              onPressed: () {
-                widget.audioController.startMusic();
-              },
-              child: const Text('Start Music'),
-            ),
-            _gap,
-            OutlinedButton(
-              onPressed: () {
-                widget.audioController.fadeOutMusic();
-              },
-              child: const Text('Fade Out Music'),
-            ),
-            _gap,
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Apply Filter'),
-                const SizedBox(width: 8),
-                SegmentedButton<Filter>(
-                  segments: const <ButtonSegment<Filter>>[
-                    ButtonSegment<Filter>(
-                      value: Filter.Reverb,
-                      label: Text('Reverb'),
-                    ),
-                    ButtonSegment<Filter>(
-                      value: Filter.Delay,
-                      label: Text('Delay'),
-                    ),
-                    ButtonSegment<Filter>(
-                      value: Filter.Off,
-                      label: Text('Off'),
-                    ),
-                  ],
-                  selected: {selectedFilter},
-                  onSelectionChanged: (Set<Filter> value) {
-                    setState(() {
-                      selectedFilter = value.first;
-                    });
-                    switch (selectedFilter) {
-                      case Filter.Reverb:
-                        widget.audioController.applyFilterVerb();
-                        break;
-                      case Filter.Delay:
-                        widget.audioController.applyFilterDelay();
-                        break;
-                      case Filter.Off:
-                        widget.audioController.removeFilter();
-                        break;
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+        title: kAppName,
+        theme: ThemeData.dark(
+          useMaterial3: true,
+        ).copyWith(
+          primaryColor: Color(0xFF0A0E21),
+          scaffoldBackgroundColor: Color(0xFF0A0E21),
         ),
-      ),
-    );
+        home: // MyHomePage(audioController: audioController),
+            DeskPage(title: kAppName));
   }
 }
+
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.audioController});
+
+//   final AudioController audioController;
+
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+
+// enum Filter {
+//   Off,
+//   Reverb,
+//   Delay,
+// }
+
+// class _MyHomePageState extends State<MyHomePage> {
+//   static const _gap = SizedBox(height: 16);
+//   Filter selectedFilter = Filter.Off;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Flutter SoLoud Demo')),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             OutlinedButton(
+//               onPressed: () {
+//                 widget.audioController.playSound('assets/sounds/pew1.mp3');
+//               },
+//               child: const Text('Play Sound1'),
+//             ),
+//             OutlinedButton(
+//               onPressed: () {
+//                 widget.audioController.playSound('assets/sounds/pew2.mp3');
+//               },
+//               child: const Text('Play Sound2'),
+//             ),
+//             _gap,
+//             OutlinedButton(
+//               onPressed: () {
+//                 widget.audioController.startMusic();
+//               },
+//               child: const Text('Start Music'),
+//             ),
+//             _gap,
+//             OutlinedButton(
+//               onPressed: () {
+//                 widget.audioController.fadeOutMusic();
+//               },
+//               child: const Text('Fade Out Music'),
+//             ),
+//             _gap,
+//             Row(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 const Text('Apply Filter'),
+//                 const SizedBox(width: 8),
+//                 SegmentedButton<Filter>(
+//                   segments: const <ButtonSegment<Filter>>[
+//                     ButtonSegment<Filter>(
+//                       value: Filter.Reverb,
+//                       label: Text('Reverb'),
+//                     ),
+//                     ButtonSegment<Filter>(
+//                       value: Filter.Delay,
+//                       label: Text('Delay'),
+//                     ),
+//                     ButtonSegment<Filter>(
+//                       value: Filter.Off,
+//                       label: Text('Off'),
+//                     ),
+//                   ],
+//                   selected: {selectedFilter},
+//                   onSelectionChanged: (Set<Filter> value) {
+//                     setState(() {
+//                       selectedFilter = value.first;
+//                     });
+//                     switch (selectedFilter) {
+//                       case Filter.Reverb:
+//                         widget.audioController.applyFilterVerb();
+//                         break;
+//                       case Filter.Delay:
+//                         widget.audioController.applyFilterDelay();
+//                         break;
+//                       case Filter.Off:
+//                         widget.audioController.removeFilter();
+//                         break;
+//                     }
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
