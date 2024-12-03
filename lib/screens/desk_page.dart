@@ -137,25 +137,25 @@ class _DeskPageState extends State<DeskPage> {
     final soundKeyConfigs = [
       [
         SoundKeyConfig(
-            color: kTabColorGreen, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorGreen, soundPath: 'assets/sounds/note1.wav'),
         SoundKeyConfig(
-            color: kTabColorBlue, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorBlue, soundPath: 'assets/sounds/note2.wav'),
       ],
       [
         SoundKeyConfig(
-            color: kTabColorOrange, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorOrange, soundPath: 'assets/sounds/note3.wav'),
         SoundKeyConfig(
-            color: kTabColorPink, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorPink, soundPath: 'assets/sounds/note4.wav'),
       ],
       [
         SoundKeyConfig(
-            color: kTabColorYellow, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorYellow, soundPath: 'assets/sounds/note5.wav'),
         SoundKeyConfig(
-            color: kTabColorPurple, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorPurple, soundPath: 'assets/sounds/note6.wav'),
       ],
       [
         SoundKeyConfig(
-            color: kTabColorWhite, soundPath: 'assets/sounds/pew1.mp3'),
+            color: kTabColorWhite, soundPath: 'assets/sounds/note7.wav'),
         SoundKeyConfig(
             color: kTabColorRed, soundPath: 'assets/sounds/pew1.mp3'),
       ],
