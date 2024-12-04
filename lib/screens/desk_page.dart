@@ -25,14 +25,17 @@ class _DeskPageState extends State<DeskPage> {
   void _handleFilterChange(Set<Filter> value) {
     setState(() {
       selectedFilter = value.first;
+      _applyFilter();
     });
+  }
 
+  void _applyFilter() {
     switch (selectedFilter) {
       case Filter.reverb:
-        widget.audioController.applyReverbFilter(0);
+        widget.audioController.applyReverbFilter(effectValue);
         break;
       case Filter.delay:
-        widget.audioController.applyDelayFilter(0);
+        widget.audioController.applyDelayFilter(effectValue);
         break;
       case Filter.off:
         widget.audioController.removeFilters();
@@ -126,7 +129,7 @@ class _DeskPageState extends State<DeskPage> {
         onChanged: (double newValue) {
           setState(() {
             effectValue = newValue;
-            _handleFilterChange({selectedFilter});
+            _applyFilter();
           });
         },
       ),
@@ -137,28 +140,20 @@ class _DeskPageState extends State<DeskPage> {
   Widget build(BuildContext context) {
     final soundKeyConfigs = [
       [
-        const SoundKeyConfig(
-            color: kTabColorGreen, soundPath: 'assets/sounds/note1.wav'),
-        const SoundKeyConfig(
-            color: kTabColorBlue, soundPath: 'assets/sounds/note2.wav'),
+        const SoundKeyConfig(color: kTabColorGreen, soundPath: 'note1'),
+        const SoundKeyConfig(color: kTabColorBlue, soundPath: 'note2'),
       ],
       [
-        const SoundKeyConfig(
-            color: kTabColorOrange, soundPath: 'assets/sounds/note3.wav'),
-        const SoundKeyConfig(
-            color: kTabColorPink, soundPath: 'assets/sounds/note4.wav'),
+        const SoundKeyConfig(color: kTabColorOrange, soundPath: 'note3'),
+        const SoundKeyConfig(color: kTabColorPink, soundPath: 'note4'),
       ],
       [
-        const SoundKeyConfig(
-            color: kTabColorYellow, soundPath: 'assets/sounds/note5.wav'),
-        const SoundKeyConfig(
-            color: kTabColorPurple, soundPath: 'assets/sounds/note6.wav'),
+        const SoundKeyConfig(color: kTabColorYellow, soundPath: 'note5'),
+        const SoundKeyConfig(color: kTabColorPurple, soundPath: 'note6'),
       ],
       [
-        const SoundKeyConfig(
-            color: kTabColorWhite, soundPath: 'assets/sounds/note7.wav'),
-        const SoundKeyConfig(
-            color: kTabColorRed, soundPath: 'assets/sounds/pew1.mp3'),
+        const SoundKeyConfig(color: kTabColorWhite, soundPath: 'note7'),
+        const SoundKeyConfig(color: kTabColorRed, soundPath: 'pew1'),
       ],
     ];
 
