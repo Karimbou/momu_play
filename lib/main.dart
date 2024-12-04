@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:logging/logging.dart';
 import 'package:momu_play/screens/desk_page.dart';
 
@@ -25,7 +26,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final audioController = AudioController();
-  await audioController.initialize();
+  await audioController.initializeSoLoud();
 
   runApp(
     MyApp(audioController: audioController),

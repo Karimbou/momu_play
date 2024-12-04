@@ -4,80 +4,126 @@ import 'package:logging/logging.dart';
 
 class AudioController {
   static final Logger _log = Logger('AudioController');
-
-  SoLoud? _soloud;
+  late final SoLoud _soloud;
   SoundHandle? _musicHandle;
 
-  Future<void> initialize() async {
+  // Constrctor to init SoLoud
+  AudioController() {
     _soloud = SoLoud.instance;
-    await _soloud!.init();
+    initializeSoLoud().then((_) => _loadAssets());
   }
 
-  void dispose() {
-    _soloud?.deinit();
+  // Soloud gets initialised
+
+  Future<void> initializeSoLoud() async {
+    try {
+      if (!_soloud.isInitialized) {
+        await _soloud.init();
+        _soloud.setVisualizationEnabled(false);
+        _soloud.setGlobalVolume(1.0);
+        _soloud.setMaxActiveVoiceCount(36);
+      }
+    } catch (e) {
+      _log.severe('Failed to initialize audio controller', e);
+    }
+  }
+
+  // Soloud loading files
+
+  Future<void> _loadAssets() async {
+    try {
+      final soundPath = await _soloud.loadFile('assets/sounds/');
+      final musicPath = await _soloud.loadAsset('aasets/music/');
+
+      applyAudioEffects();
+      playSound(soundPath as String);
+    } catch (e) {
+      _log.severe('Failed to load asssets into memory', e);
+    }
+  }
+
+// Apply Audio Effcts at the initial State
+  Future<void> applyAudioEffects() async {
+    _soloud.filters.echoFilter.activate();
+    _soloud.filters.freeverbFilter.activate();
+
+    _soloud.filters.echoFilter.wet.value = 0.0;
+    _soloud.filters.echoFilter.delay.value = 0.1;
+    _soloud.filters.echoFilter.decay.value = 0.5;
+
+    _soloud.filters.freeverbFilter.wet.value = 0.1;
+    _soloud.filters.freeverbFilter.roomSize.value = 0.0;
   }
 
   Future<void> playSound(String assetKey) async {
     try {
-      final source = await _soloud!.loadAsset(assetKey);
-      await _soloud!.play(source);
+      final source = await _soloud.loadAsset(assetKey);
+      await _soloud.play(source);
     } on SoLoudException catch (e) {
       _log.severe("Can not play sound '$assetKey'. Ignoring.", e);
     }
   }
 
-  Future<void> startMusic() async {
+  void fadeOutMusic() {
+    try {
+      const fadeLength = Duration(seconds: 3);
+      _soloud.fadeVolume(_musicHandle!, 0.0, fadeLength);
+      _soloud.scheduleStop(_musicHandle!, fadeLength);
+      _musicHandle = null;
+    } catch (e) {
+      _log.severe('Failed to fade out music', e);
+    }
+  }
+
+  void applyReverbFilter(double intensity) {
+    try {
+      _soloud.filters.freeverbFilter.activate();
+      _soloud.filters.freeverbFilter.wet.value = 0.5;
+      _soloud.filters.freeverbFilter.roomSize.value = 0.5;
+    } catch (e) {
+      _log.severe('Failed to apply reverb filter', e);
+    }
+  }
+
+  void applyDelayFilter(double intensity) {
+    try {
+      _soloud.filters.echoFilter.activate();
+      _soloud.filters.echoFilter.wet.value = 0.5;
+      _soloud.filters.echoFilter.delay.value = 0.5;
+    } catch (e) {
+      _log.severe('Failed to apply delay filter', e);
+    }
+  }
+
+  void removeFilters() {
+    try {
+      if (_soloud.filters.freeverbFilter.isActive) {
+        _soloud.filters.freeverbFilter.deactivate();
+      }
+      if (_soloud.filters.echoFilter.isActive) {
+        _soloud.filters.echoFilter.deactivate();
+      }
+    } catch (e) {
+      _log.severe('Failed to remove filters', e);
+    }
+  }
+
+  void _stopMusic() {
     if (_musicHandle != null) {
-      if (_soloud!.getIsValidVoiceHandle(_musicHandle!)) {
-        _log.info('Music is already playing Stop first.');
-        await _soloud!.stop(_musicHandle!);
+      try {
+        _soloud.stop(_musicHandle!);
+        _musicHandle = null;
+      } catch (e) {
+        _log.severe('Failed to stop music', e);
       }
     }
-    _log.info('Loading music');
-    final musicSource = await _soloud!
-        .loadAsset('assets/music/looped-song.ogg', mode: LoadMode.disk);
-    musicSource.allInstancesFinished.first.then((_) {
-      _soloud!.disposeSource(musicSource);
-      _log.info('Music Source disposed');
-      _musicHandle = null;
-    });
-    _log.info('Playing music');
-    _musicHandle = await _soloud!.play(
-      musicSource,
-      volume: 0.6,
-      looping: true,
-      loopingStartAt: const Duration(seconds: 25, milliseconds: 43),
-    );
   }
 
-  void fadeOutMusic() {
-    if (_musicHandle == null) {
-      _log.info('Nothing to fade out');
-      return;
-    }
-    const length = Duration(seconds: 3);
-    _soloud!.fadeVolume(_musicHandle!, 0, length);
-    _soloud!.scheduleStop(_musicHandle!, length);
-  }
-
-  void applyFilterVerb(double effectValue) {
-    _soloud!.filters.freeverbFilter.activate();
-    _soloud!.filters.freeverbFilter.wet.value = 0.5;
-    _soloud!.filters.freeverbFilter.roomSize.value = 0.5;
-  }
-
-  void applyFilterDelay(double effectValue) {
-    _soloud!.filters.echoFilter.activate();
-    _soloud!.filters.echoFilter.wet.value = 0.5;
-    _soloud!.filters.echoFilter.delay.value = 0.5;
-  }
-
-  void removeFilter() {
-    if (_soloud!.filters.freeverbFilter.isActive) {
-      _soloud!.filters.freeverbFilter.deactivate();
-    }
-    if (_soloud!.filters.echoFilter.isActive) {
-      _soloud!.filters.echoFilter.deactivate();
+  void _stopAllSounds() {
+    try {
+      _soloud.deinit();
+    } catch (e) {
+      _log.severe('Failed to stop all sounds', e);
     }
   }
 }

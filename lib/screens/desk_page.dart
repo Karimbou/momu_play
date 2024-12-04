@@ -29,13 +29,13 @@ class _DeskPageState extends State<DeskPage> {
 
     switch (selectedFilter) {
       case Filter.reverb:
-        widget.audioController.applyFilterVerb(effectValue);
+        widget.audioController.applyReverbFilter(0);
         break;
       case Filter.delay:
-        widget.audioController.applyFilterDelay(effectValue);
+        widget.audioController.applyDelayFilter(0);
         break;
       case Filter.off:
-        widget.audioController.removeFilter();
+        widget.audioController.removeFilters();
         break;
     }
   }
