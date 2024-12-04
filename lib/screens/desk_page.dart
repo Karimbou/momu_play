@@ -63,8 +63,8 @@ class _DeskPageState extends State<DeskPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: const Text(
+          const Expanded(
+            child: Text(
               'Filter Section',
               style: kSliderTextStyle,
             ),
@@ -73,7 +73,7 @@ class _DeskPageState extends State<DeskPage> {
             child: _buildFilterButtons(),
           ),
           Expanded(child: _buildEffectSlider()),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
         ],
@@ -137,27 +137,27 @@ class _DeskPageState extends State<DeskPage> {
   Widget build(BuildContext context) {
     final soundKeyConfigs = [
       [
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorGreen, soundPath: 'assets/sounds/note1.wav'),
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorBlue, soundPath: 'assets/sounds/note2.wav'),
       ],
       [
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorOrange, soundPath: 'assets/sounds/note3.wav'),
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorPink, soundPath: 'assets/sounds/note4.wav'),
       ],
       [
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorYellow, soundPath: 'assets/sounds/note5.wav'),
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorPurple, soundPath: 'assets/sounds/note6.wav'),
       ],
       [
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorWhite, soundPath: 'assets/sounds/note7.wav'),
-        SoundKeyConfig(
+        const SoundKeyConfig(
             color: kTabColorRed, soundPath: 'assets/sounds/pew1.mp3'),
       ],
     ];
