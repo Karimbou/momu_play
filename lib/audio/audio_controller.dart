@@ -40,6 +40,16 @@ class AudioController {
     }
   }
 
+  // PlaySound Function
+  Future<void> playSound(String assetKey) async {
+    try {
+      final source = await _soloud.loadAsset(assetKey);
+      await _soloud.play(source);
+    } on SoLoudException catch (e) {
+      _log.severe("Can not play sound '$assetKey'. Ignoring.", e);
+    }
+  }
+
 // Apply Audio Effcts at the initial State
   Future<void> applyAudioEffects() async {
     _soloud.filters.echoFilter.activate();
@@ -51,15 +61,6 @@ class AudioController {
 
     _soloud.filters.freeverbFilter.wet.value = 0.1;
     _soloud.filters.freeverbFilter.roomSize.value = 0.0;
-  }
-
-  Future<void> playSound(String assetKey) async {
-    try {
-      final source = await _soloud.loadAsset(assetKey);
-      await _soloud.play(source);
-    } on SoLoudException catch (e) {
-      _log.severe("Can not play sound '$assetKey'. Ignoring.", e);
-    }
   }
 
   void fadeOutMusic() {
