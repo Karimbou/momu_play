@@ -19,7 +19,7 @@ class DeskPage extends StatefulWidget {
 enum Filter { off, reverb, delay }
 
 class _DeskPageState extends State<DeskPage> {
-  double effectValue = 0.0;
+  double effectValue = 0.1;
   Filter selectedFilter = Filter.off;
 
   void _handleFilterChange(Set<Filter> value) {
@@ -124,7 +124,7 @@ class _DeskPageState extends State<DeskPage> {
       ),
       child: Slider(
         value: effectValue,
-        min: 0.0,
+        min: 0.1,
         max: 1.0,
         onChanged: (double newValue) {
           setState(() {

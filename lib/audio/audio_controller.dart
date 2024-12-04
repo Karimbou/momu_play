@@ -77,9 +77,11 @@ class AudioController {
 
   void applyReverbFilter(double intensity) {
     try {
-      _soloud.filters.freeverbFilter.activate();
-      _soloud.filters.freeverbFilter.wet.value = 0.5;
-      _soloud.filters.freeverbFilter.roomSize.value = 0.5;
+      if (!_soloud.filters.freeverbFilter.isActive) {
+        _soloud.filters.freeverbFilter.activate();
+      }
+      _soloud.filters.freeverbFilter.wet.value = intensity;
+      _soloud.filters.freeverbFilter.roomSize.value = intensity;
     } catch (e) {
       _log.severe('Failed to apply reverb filter', e);
     }
@@ -87,9 +89,11 @@ class AudioController {
 
   void applyDelayFilter(double intensity) {
     try {
-      _soloud.filters.echoFilter.activate();
-      _soloud.filters.echoFilter.wet.value = 0.5;
-      _soloud.filters.echoFilter.delay.value = 0.5;
+      if (!_soloud.filters.echoFilter.isActive) {
+        _soloud.filters.echoFilter.activate();
+      }
+      _soloud.filters.echoFilter.wet.value = intensity;
+      _soloud.filters.echoFilter.delay.value = intensity;
     } catch (e) {
       _log.severe('Failed to apply delay filter', e);
     }
