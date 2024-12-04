@@ -6,14 +6,13 @@ class AudioController {
   static final Logger _log = Logger('AudioController');
   late final SoLoud _soloud;
   SoundHandle? _musicHandle;
+  final Map<String, AudioSource> _preloadedSounds = {};
 
-  // Constrctor to init SoLoud
   AudioController() {
     _soloud = SoLoud.instance;
     initializeSoLoud().then((_) => _loadAssets());
   }
 
-  // Soloud gets initialised
   Future<void> initializeSoLoud() async {
     try {
       if (!_soloud.isInitialized) {
@@ -22,45 +21,47 @@ class AudioController {
         _soloud.setGlobalVolume(1.0);
         _soloud.setMaxActiveVoiceCount(36);
       }
-    } catch (e) {
+    } on SoLoudException catch (e) {
       _log.severe('Failed to initialize audio controller', e);
     }
   }
 
-  // Soloud loading files
   Future<void> _loadAssets() async {
     try {
-      final soundPath = await _soloud.loadFile('assets/sounds/');
-      // final musicPath = await _soloud.loadAsset('aasets/music/');
+      _preloadedSounds['note1'] =
+          await _soloud.loadAsset('assets/sounds/note1.wav');
+      _preloadedSounds['note2'] =
+          await _soloud.loadAsset('assets/sounds/note2.wav');
+      _preloadedSounds['note3'] =
+          await _soloud.loadAsset('assets/sounds/note3.wav');
+      _preloadedSounds['note4'] =
+          await _soloud.loadAsset('assets/sounds/note4.wav');
+      _preloadedSounds['note5'] =
+          await _soloud.loadAsset('assets/sounds/note5.wav');
+      _preloadedSounds['note6'] =
+          await _soloud.loadAsset('assets/sounds/note6.wav');
+      _preloadedSounds['note7'] =
+          await _soloud.loadAsset('assets/sounds/note7.wav');
+      _preloadedSounds['pew1'] =
+          await _soloud.loadAsset('assets/sounds/pew1.mp3');
 
-      applyAudioEffects();
-      playSound(soundPath as String);
-    } catch (e) {
-      _log.severe('Failed to load asssets into memory', e);
-    }
-  }
-
-  // PlaySound Function
-  Future<void> playSound(String assetKey) async {
-    try {
-      final source = await _soloud.loadAsset(assetKey);
-      await _soloud.play(source);
+      applyInitialAudioEffects();
     } on SoLoudException catch (e) {
-      _log.severe("Can not play sound '$assetKey'. Ignoring.", e);
+      _log.severe('Failed to load assets into memory', e);
     }
   }
 
-// Apply Audio Effcts at the initial State
-  Future<void> applyAudioEffects() async {
-    _soloud.filters.echoFilter.activate();
-    _soloud.filters.freeverbFilter.activate();
-
-    _soloud.filters.echoFilter.wet.value = 0.0;
-    _soloud.filters.echoFilter.delay.value = 0.1;
-    _soloud.filters.echoFilter.decay.value = 0.5;
-
-    _soloud.filters.freeverbFilter.wet.value = 0.1;
-    _soloud.filters.freeverbFilter.roomSize.value = 0.0;
+  Future<void> playSound(String soundKey) async {
+    try {
+      final source = _preloadedSounds[soundKey];
+      if (source != null) {
+        await _soloud.play(source);
+      } else {
+        _log.warning("Sound '$soundKey' not preloaded.");
+      }
+    } on SoLoudException catch (e) {
+      _log.severe("Can not play sound '$soundKey'.", e);
+    }
   }
 
   void fadeOutMusic() {
@@ -125,108 +126,25 @@ class AudioController {
       _log.severe('Failed to stop all sounds', e);
     }
   }
+
+  Future<void> startMusic(String musicPath) async {
+    try {
+      final source = await _soloud.loadAsset(musicPath);
+      _musicHandle = await _soloud.play(source);
+    } on SoLoudException catch (e) {
+      _log.severe("Cannot start music '$musicPath'.", e);
+    }
+  }
+
+  void applyInitialAudioEffects() {
+    _soloud.filters.echoFilter.activate();
+    _soloud.filters.freeverbFilter.activate();
+
+    _soloud.filters.echoFilter.wet.value = 0.0;
+    _soloud.filters.echoFilter.delay.value = 0.1;
+    _soloud.filters.echoFilter.decay.value = 0.5;
+
+    _soloud.filters.freeverbFilter.wet.value = 0.1;
+    _soloud.filters.freeverbFilter.roomSize.value = 0.0;
+  }
 }
-
-
-
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.audioController});
-
-//   final AudioController audioController;
-
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-
-// enum Filter {
-//   Off,
-//   Reverb,
-//   Delay,
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   static const _gap = SizedBox(height: 16);
-//   Filter selectedFilter = Filter.Off;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Flutter SoLoud Demo')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             OutlinedButton(
-//               onPressed: () {
-//                 widget.audioController.playSound('assets/sounds/pew1.mp3');
-//               },
-//               child: const Text('Play Sound1'),
-//             ),
-//             OutlinedButton(
-//               onPressed: () {
-//                 widget.audioController.playSound('assets/sounds/pew2.mp3');
-//               },
-//               child: const Text('Play Sound2'),
-//             ),
-//             _gap,
-//             OutlinedButton(
-//               onPressed: () {
-//                 widget.audioController.startMusic();
-//               },
-//               child: const Text('Start Music'),
-//             ),
-//             _gap,
-//             OutlinedButton(
-//               onPressed: () {
-//                 widget.audioController.fadeOutMusic();
-//               },
-//               child: const Text('Fade Out Music'),
-//             ),
-//             _gap,
-//             Row(
-//               mainAxisSize: MainAxisSize.min,
-//               children: [
-//                 const Text('Apply Filter'),
-//                 const SizedBox(width: 8),
-//                 SegmentedButton<Filter>(
-//                   segments: const <ButtonSegment<Filter>>[
-//                     ButtonSegment<Filter>(
-//                       value: Filter.Reverb,
-//                       label: Text('Reverb'),
-//                     ),
-//                     ButtonSegment<Filter>(
-//                       value: Filter.Delay,
-//                       label: Text('Delay'),
-//                     ),
-//                     ButtonSegment<Filter>(
-//                       value: Filter.Off,
-//                       label: Text('Off'),
-//                     ),
-//                   ],
-//                   selected: {selectedFilter},
-//                   onSelectionChanged: (Set<Filter> value) {
-//                     setState(() {
-//                       selectedFilter = value.first;
-//                     });
-//                     switch (selectedFilter) {
-//                       case Filter.Reverb:
-//                         widget.audioController.applyFilterVerb();
-//                         break;
-//                       case Filter.Delay:
-//                         widget.audioController.applyFilterDelay();
-//                         break;
-//                       case Filter.Off:
-//                         widget.audioController.removeFilter();
-//                         break;
-//                     }
-//                   },
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
