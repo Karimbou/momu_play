@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 const kAppName = "MoMu Player";
 
-const kBbottomContainerHeight = 80.0;
-
 const kTabColorGreen = Colors.green;
 const kTabColorBlue = Colors.blue;
 const kTabColorRed = Colors.red;
@@ -13,8 +11,7 @@ const kTabColorPink = Colors.pink;
 const kTabColorPurple = Colors.purple;
 const kTabColorWhite = Colors.white;
 
-const kSliderContainerColor = Colors.black87;
-
+// Slider Layout
 const kSliderTextStyle = TextStyle(
   fontSize: 24.0,
   color: Color.fromARGB(255, 104, 187, 111),
