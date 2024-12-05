@@ -13,22 +13,22 @@ void setupLoadAssets(SoLoud soloud, Map<String, AudioSource> preloadedSounds) {
 
 Future<void> loadAssets() async {
   try {
-    _preloadedSounds['note1'] =
-        await _soloud.loadAsset('assets/sounds/note1.wav');
-    _preloadedSounds['note2'] =
-        await _soloud.loadAsset('assets/sounds/note2.wav');
-    _preloadedSounds['note3'] =
-        await _soloud.loadAsset('assets/sounds/note3.wav');
-    _preloadedSounds['note4'] =
-        await _soloud.loadAsset('assets/sounds/note4.wav');
-    _preloadedSounds['note5'] =
-        await _soloud.loadAsset('assets/sounds/note5.wav');
-    _preloadedSounds['note6'] =
-        await _soloud.loadAsset('assets/sounds/note6.wav');
-    _preloadedSounds['note7'] =
-        await _soloud.loadAsset('assets/sounds/note7.wav');
-    _preloadedSounds['pew1'] =
-        await _soloud.loadAsset('assets/sounds/pew1.mp3');
+    _preloadedSounds['wurli_c'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_c.wav');
+    _preloadedSounds['wurli_d'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_d.wav');
+    _preloadedSounds['wurli_e'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_e.wav');
+    _preloadedSounds['wurli_f'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_f.wav');
+    _preloadedSounds['wurli_g'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_g.wav');
+    _preloadedSounds['wurli_a'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_a.wav');
+    _preloadedSounds['wurli_b'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_b.wav');
+    _preloadedSounds['wurli_c_oc'] =
+        await _soloud.loadAsset('assets/sounds/wurli/wurli_c_oc.wav');
 
     applyInitialAudioEffects();
   } on SoLoudException catch (e) {

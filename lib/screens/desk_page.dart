@@ -140,20 +140,20 @@ class _DeskPageState extends State<DeskPage> {
   Widget build(BuildContext context) {
     final soundKeyConfigs = [
       [
-        const SoundKeyConfig(color: kTabColorGreen, soundPath: 'note1'),
-        const SoundKeyConfig(color: kTabColorBlue, soundPath: 'note2'),
+        const SoundKeyConfig(color: kTabColorGreen, soundPath: 'wurli_c'),
+        const SoundKeyConfig(color: kTabColorBlue, soundPath: 'wurli_d'),
       ],
       [
-        const SoundKeyConfig(color: kTabColorOrange, soundPath: 'note3'),
-        const SoundKeyConfig(color: kTabColorPink, soundPath: 'note4'),
+        const SoundKeyConfig(color: kTabColorOrange, soundPath: 'wurli_e'),
+        const SoundKeyConfig(color: kTabColorPink, soundPath: 'wurli_f'),
       ],
       [
-        const SoundKeyConfig(color: kTabColorYellow, soundPath: 'note5'),
-        const SoundKeyConfig(color: kTabColorPurple, soundPath: 'note6'),
+        const SoundKeyConfig(color: kTabColorYellow, soundPath: 'wurli_g'),
+        const SoundKeyConfig(color: kTabColorPurple, soundPath: 'wurli_a'),
       ],
       [
-        const SoundKeyConfig(color: kTabColorWhite, soundPath: 'note7'),
-        const SoundKeyConfig(color: kTabColorRed, soundPath: 'pew1'),
+        const SoundKeyConfig(color: kTabColorWhite, soundPath: 'wurli_b'),
+        const SoundKeyConfig(color: kTabColorRed, soundPath: 'wurli_c_oc'),
       ],
     ];
 
