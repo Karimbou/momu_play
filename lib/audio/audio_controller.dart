@@ -8,14 +8,32 @@ class AudioController {
   late final SoLoud _soloud;
   final Map<String, AudioSource> _preloadedSounds = {};
   SoundHandle? _musicHandle;
+  Future<void>? _initializationFuture;
 
   AudioController() {
     _soloud = SoLoud.instance;
-    initializeSoLoud().then((_) {
-      setupLoadAssets(_soloud, _preloadedSounds);
-      loadAssets();
-    });
+    _initializationFuture = _initialize();
   }
+  Future<void> _initialize() async {
+    try {
+      await initializeSoLoud();
+      // Make sure setupLoadAssets is completed before moving on
+      setupLoadAssets(_soloud, _preloadedSounds);
+      await loadAssets();
+
+      // Verify that sounds were actually loaded
+      if (_preloadedSounds.isEmpty) {
+        _log.warning('No sounds were preloaded during initialization');
+      } else {
+        _log.info('Successfully loaded ${_preloadedSounds.length} sounds');
+      }
+    } catch (e) {
+      _log.severe('Failed to complete initialization', e);
+      rethrow; // This will make the initialization failure visible
+    }
+  }
+
+  Future<void> get initialized => _initializationFuture ?? Future.value();
 
   Future<void> initializeSoLoud() async {
     try {
@@ -32,12 +50,22 @@ class AudioController {
 
   Future<void> playSound(String soundKey) async {
     try {
-      final source = _preloadedSounds[soundKey];
-      if (source != null) {
-        await _soloud.play(source);
-      } else {
-        _log.warning("Sound '$soundKey' not preloaded.");
+      await initialized;
+
+      // Add debugging info
+      if (_preloadedSounds.isEmpty) {
+        _log.warning('No sounds are loaded in the controller');
+        return;
       }
+
+      final source = _preloadedSounds[soundKey];
+      if (source == null) {
+        _log.warning(
+            "Sound '$soundKey' not preloaded. Available sounds: ${_preloadedSounds.keys.join(', ')}");
+        return;
+      }
+
+      await _soloud.play(source);
     } on SoLoudException catch (e) {
       _log.severe("Can not play sound '$soundKey'.", e);
     }

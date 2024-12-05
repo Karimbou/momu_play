@@ -22,6 +22,14 @@ class _DeskPageState extends State<DeskPage> {
   double effectValue = 0.1;
   Filter selectedFilter = Filter.off;
 
+  @override
+  void initState() {
+    super.initState();
+    widget.audioController.initialized.then((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
   void _handleFilterChange(Set<Filter> value) {
     setState(() {
       selectedFilter = value.first;
