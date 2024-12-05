@@ -91,12 +91,12 @@ class AudioController {
     }
   }
 
-  // Future<void> startMusic(String musicPath) async {
-  //   try {
-  //     final source = await _soloud.loadAsset(musicPath);
-  //     _musicHandle = await _soloud.play(source);
-  //   } on SoLoudException catch (e) {
-  //     _log.severe("Cannot start music '$musicPath'.", e);
-  //   }
-  // }
+  Future<void> startMusic(String musicPath) async {
+    try {
+      final source = await _soloud.loadAsset(musicPath);
+      _musicHandle = await _soloud.play(source);
+    } on SoLoudException catch (e) {
+      _log.severe("Cannot start music '$musicPath'.", e);
+    }
+  }
 }
