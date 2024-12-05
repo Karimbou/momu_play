@@ -6,6 +6,7 @@ import 'load_assets.dart';
 class AudioController {
   static final Logger _log = Logger('AudioController');
   late final SoLoud _soloud;
+  SoLoud get soloud => _soloud;
   final Map<String, AudioSource> _preloadedSounds = {};
   SoundHandle? _musicHandle;
   Future<void>? _initializationFuture;

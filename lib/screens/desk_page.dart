@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:momu_play/components/sound_key.dart';
 import 'package:momu_play/constants.dart';
 import 'package:momu_play/audio/audio_controller.dart';
+import 'settings_page.dart';
 
 class DeskPage extends StatefulWidget {
   final String title;
@@ -168,6 +169,21 @@ class _DeskPageState extends State<DeskPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(
+                    audioController: widget.audioController,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
