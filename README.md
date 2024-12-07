@@ -1,5 +1,6 @@
 # MoMu Play
-MoMu Play is an open source Music Player written in Dart / Flutter is meant to make music players accessible to anyone and to play more music. It is currently in development status. 
+MoMu (More Music) Play is an open source Music Player written in Dart / Flutter 
+MoMu is meant to make music players accessible to anyone and to play more music. It is currently in development status. 
  
 The underlying C++ audioengine is called SoLoud and offers a lot of features. 
 https://solhsa.com/soloud/index.html
