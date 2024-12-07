@@ -3,26 +3,39 @@ import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:logging/logging.dart';
 import 'load_assets.dart';
 
+/// AudioController handles all audio-related operations in the app
+/// It manages sound effects, background music and audio filters
 class AudioController {
+  // Create a logger instance for debugging and error tracking
   static final Logger _log = Logger('AudioController');
+
+  // SoLoud is the main audio engine instance
   late final SoLoud _soloud;
   SoLoud get soloud => _soloud;
+
+  // Store preloaded sound effects for quick access
   final Map<String, AudioSource> _preloadedSounds = {};
+
+  // Keep track of currently playing background music
   SoundHandle? _musicHandle;
+  // Future to track initialization status
   Future<void>? _initializationFuture;
 
+  /// Constructor initializes the audio engine
   AudioController() {
     _soloud = SoLoud.instance;
     _initializationFuture = _initialize();
   }
+
+  /// Initialize the audio controller and load sound assets
   Future<void> _initialize() async {
     try {
       await initializeSoLoud();
-      // Make sure setupLoadAssets is completed before moving on
+      // Load all sound assets into memory
       setupLoadAssets(_soloud, _preloadedSounds);
       await loadAssets();
 
-      // Verify that sounds were actually loaded
+      // Log loading status
       if (_preloadedSounds.isEmpty) {
         _log.warning('No sounds were preloaded during initialization');
       } else {
@@ -30,30 +43,34 @@ class AudioController {
       }
     } catch (e) {
       _log.severe('Failed to complete initialization', e);
-      rethrow; // This will make the initialization failure visible
+      rethrow;
     }
   }
 
+  /// Public getter to check if initialization is complete
   Future<void> get initialized => _initializationFuture ?? Future.value();
 
+  /// Set up the SoLoud audio engine with default settings
   Future<void> initializeSoLoud() async {
     try {
       if (!_soloud.isInitialized) {
         await _soloud.init();
         _soloud.setVisualizationEnabled(false);
-        _soloud.setGlobalVolume(1.0);
-        _soloud.setMaxActiveVoiceCount(36);
+        _soloud.setGlobalVolume(1.0); // Set default volume to 100%
+        _soloud
+            .setMaxActiveVoiceCount(36); // Allow up to 36 simultaneous sounds
       }
     } on SoLoudException catch (e) {
       _log.severe('Failed to initialize audio controller', e);
     }
   }
 
+  /// Play a sound effect by its key
+  /// [soundKey] is the identifier for the preloaded sound
   Future<void> playSound(String soundKey) async {
     try {
       await initialized;
 
-      // Add debugging info
       if (_preloadedSounds.isEmpty) {
         _log.warning('No sounds are loaded in the controller');
         return;
@@ -72,6 +89,7 @@ class AudioController {
     }
   }
 
+  /// Gradually fade out and stop the background music
   void fadeOutMusic() {
     try {
       const fadeLength = Duration(seconds: 3);
@@ -83,6 +101,8 @@ class AudioController {
     }
   }
 
+  /// Apply reverb effect to the audio output
+  /// [intensity] controls the strength of the reverb (0.0 to 1.0)
   void applyReverbFilter(double intensity) {
     try {
       if (!_soloud.filters.freeverbFilter.isActive) {
@@ -95,6 +115,8 @@ class AudioController {
     }
   }
 
+  /// Apply delay/echo effect to the audio output
+  /// [intensity] controls the strength of the delay (0.0 to 1.0)
   void applyDelayFilter(double intensity) {
     try {
       if (!_soloud.filters.echoFilter.isActive) {
@@ -107,6 +129,7 @@ class AudioController {
     }
   }
 
+  /// Remove all active audio filters
   void removeFilters() {
     try {
       if (_soloud.filters.freeverbFilter.isActive) {
@@ -120,6 +143,8 @@ class AudioController {
     }
   }
 
+  /// Start playing background music from the specified path
+  /// [musicPath] is the path to the music file
   Future<void> startMusic(String musicPath) async {
     try {
       final source = await _soloud.loadAsset(musicPath);

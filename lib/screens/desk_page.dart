@@ -4,6 +4,7 @@ import 'package:momu_play/constants.dart';
 import 'package:momu_play/audio/audio_controller.dart';
 import 'settings_page.dart';
 
+/// DeskPage is the main screen of the app where users can play sounds and apply effects
 class DeskPage extends StatefulWidget {
   final String title;
   final AudioController audioController;
@@ -17,20 +18,25 @@ class DeskPage extends StatefulWidget {
   State<DeskPage> createState() => _DeskPageState();
 }
 
+/// Enum to represent the different filter types available
 enum Filter { off, reverb, delay }
 
 class _DeskPageState extends State<DeskPage> {
+  // Current effect intensity value (0.1 to 1.0)
   double effectValue = 0.1;
+  // Currently selected audio filter
   Filter selectedFilter = Filter.off;
 
   @override
   void initState() {
     super.initState();
+    // Wait for audio controller to initialize
     widget.audioController.initialized.then((_) {
       if (mounted) setState(() {});
     });
   }
 
+  /// Handles changes in filter selection from the segmented button
   void _handleFilterChange(Set<Filter> value) {
     setState(() {
       selectedFilter = value.first;
@@ -38,6 +44,7 @@ class _DeskPageState extends State<DeskPage> {
     });
   }
 
+  /// Applies the selected filter with current effect value
   void _applyFilter() {
     switch (selectedFilter) {
       case Filter.reverb:
@@ -52,6 +59,7 @@ class _DeskPageState extends State<DeskPage> {
     }
   }
 
+  /// Builds a row of sound keys based on provided configurations
   Widget _buildSoundKeyRow(List<SoundKeyConfig> configs) {
     return Expanded(
       child: Row(
@@ -69,6 +77,7 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
+  /// Builds the filter control section including title, buttons and slider
   Widget _buildFilterSection() {
     return Expanded(
       child: Column(
@@ -93,6 +102,7 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
+  /// Builds the segmented button for filter selection
   Widget _buildFilterButtons() {
     return SegmentedButtonTheme(
       data: SegmentedButtonTheme.of(context).copyWith(
@@ -121,6 +131,7 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
+  /// Builds the slider for controlling effect intensity
   Widget _buildEffectSlider() {
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
