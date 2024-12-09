@@ -13,7 +13,7 @@ const kTabColorWhite = Colors.white;
 
 // Slider Layout
 const kSliderTextStyle = TextStyle(
-  fontSize: 24.0,
+  fontSize: 12.0,
   color: Color.fromARGB(255, 104, 187, 111),
 );
 

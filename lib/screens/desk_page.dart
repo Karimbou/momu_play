@@ -4,7 +4,6 @@ import 'package:momu_play/constants.dart';
 import 'package:momu_play/audio/audio_controller.dart';
 import 'settings_page.dart';
 
-/// DeskPage is the main screen of the app where users can play sounds and apply effects
 class DeskPage extends StatefulWidget {
   final String title;
   final AudioController audioController;
@@ -18,25 +17,20 @@ class DeskPage extends StatefulWidget {
   State<DeskPage> createState() => _DeskPageState();
 }
 
-/// Enum to represent the different filter types available
 enum Filter { off, reverb, delay }
 
 class _DeskPageState extends State<DeskPage> {
-  // Current effect intensity value (0.1 to 1.0)
-  double effectValue = 0.1;
-  // Currently selected audio filter
+  double wetValue = 0.1;
   Filter selectedFilter = Filter.off;
 
   @override
   void initState() {
     super.initState();
-    // Wait for audio controller to initialize
     widget.audioController.initialized.then((_) {
       if (mounted) setState(() {});
     });
   }
 
-  /// Handles changes in filter selection from the segmented button
   void _handleFilterChange(Set<Filter> value) {
     setState(() {
       selectedFilter = value.first;
@@ -44,22 +38,24 @@ class _DeskPageState extends State<DeskPage> {
     });
   }
 
-  /// Applies the selected filter with current effect value
   void _applyFilter() {
     switch (selectedFilter) {
       case Filter.reverb:
-        widget.audioController.applyReverbFilter(effectValue);
+        widget.audioController.soloud.filters.freeverbFilter.wet.value =
+            wetValue;
+        widget.audioController.soloud.filters.echoFilter.wet.value = 0.0;
         break;
       case Filter.delay:
-        widget.audioController.applyDelayFilter(effectValue);
+        widget.audioController.soloud.filters.echoFilter.wet.value = wetValue;
+        widget.audioController.soloud.filters.freeverbFilter.wet.value = 0.0;
         break;
       case Filter.off:
-        widget.audioController.removeFilters();
+        widget.audioController.soloud.filters.freeverbFilter.wet.value = 0.0;
+        widget.audioController.soloud.filters.echoFilter.wet.value = 0.0;
         break;
     }
   }
 
-  /// Builds a row of sound keys based on provided configurations
   Widget _buildSoundKeyRow(List<SoundKeyConfig> configs) {
     return Expanded(
       child: Row(
@@ -77,7 +73,6 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
-  /// Builds the filter control section including title, buttons and slider
   Widget _buildFilterSection() {
     return Expanded(
       child: Column(
@@ -102,7 +97,6 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
-  /// Builds the segmented button for filter selection
   Widget _buildFilterButtons() {
     return SegmentedButtonTheme(
       data: SegmentedButtonTheme.of(context).copyWith(
@@ -131,7 +125,6 @@ class _DeskPageState extends State<DeskPage> {
     );
   }
 
-  /// Builds the slider for controlling effect intensity
   Widget _buildEffectSlider() {
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
@@ -142,16 +135,24 @@ class _DeskPageState extends State<DeskPage> {
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 18.0),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 35.0),
       ),
-      child: Slider(
-        value: effectValue,
-        min: 0.1,
-        max: 1.0,
-        onChanged: (double newValue) {
-          setState(() {
-            effectValue = newValue;
-            _applyFilter();
-          });
-        },
+      child: Column(
+        children: [
+          const Text(
+            'Effect Intensity',
+            style: kSliderTextStyle,
+          ),
+          Slider(
+            value: wetValue,
+            min: 0.1,
+            max: 1.0,
+            onChanged: (double newValue) {
+              setState(() {
+                wetValue = newValue;
+                _applyFilter();
+              });
+            },
+          ),
+        ],
       ),
     );
   }

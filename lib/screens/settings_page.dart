@@ -15,12 +15,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  double _reverbWet = 0.1;
   double _reverbRoomSize = 0.1;
-  double _delayWet = 0.1;
   double _delayTime = 0.1;
   double _delayDecay = 0.5;
-
   @override
   void initState() {
     super.initState();
@@ -30,7 +27,9 @@ class _SettingsPageState extends State<SettingsPage> {
   void _loadCurrentSettings() {
     final SoLoud soloud = widget.audioController.soloud;
     setState(() {
-      _reverbWet = soloud.filters.freeverbFilter.wet.value;
+      _reverbRoomSize = soloud.filters.freeverbFilter.roomSize.value;
+      _delayTime = soloud.filters.echoFilter.delay.value;
+      _delayDecay = soloud.filters.echoFilter.decay.value;
     });
   }
 
@@ -39,17 +38,6 @@ class _SettingsPageState extends State<SettingsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Reverb Settings', style: TextStyle(fontSize: 20)),
-        _buildSlider(
-          'Wet',
-          _reverbWet,
-          (value) {
-            setState(() {
-              _reverbWet = value;
-              widget.audioController.soloud.filters.freeverbFilter.wet.value =
-                  value;
-            });
-          },
-        ),
         _buildSlider(
           'Room Size',
           _reverbRoomSize,
@@ -63,17 +51,6 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         const SizedBox(height: 20),
         const Text('Delay Settings', style: TextStyle(fontSize: 20)),
-        _buildSlider(
-          'Wet',
-          _delayWet,
-          (value) {
-            setState(() {
-              _delayWet = value;
-              widget.audioController.soloud.filters.echoFilter.wet.value =
-                  value;
-            });
-          },
-        ),
         _buildSlider(
           'Delay Time',
           _delayTime,
@@ -107,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Text(label),
         Slider(
           value: value,
-          min: 0.1,
+          min: 0.0,
           max: 1.0,
           onChanged: onChanged,
         ),
